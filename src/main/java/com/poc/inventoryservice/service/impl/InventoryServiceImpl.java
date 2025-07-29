@@ -1,4 +1,4 @@
-package com.poc.inventoryservice.serviceimpl;
+package com.poc.inventoryservice.service.impl;
 
 import com.poc.inventoryservice.entity.Inventory;
 import com.poc.inventoryservice.enums.InventoryStatus;
@@ -11,13 +11,12 @@ import com.poc.inventoryservice.service.InventoryService;
 import com.poc.inventoryservice.service.StockService;
 import com.poc.inventoryservice.util.GenericMapper;
 import com.poc.inventoryservice.validation.InventoryValidation;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
@@ -38,49 +37,53 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Transactional
     public ApiResponse createInventory(InventoryRequest inventoryRequestDto) {
 
         if (validateInventory(inventoryRequestDto)) {
             inventoryRequestDto.setStatus(InventoryStatus.SUCCESS.getValue());
 
             Inventory inventory = genericMapper.convert(inventoryRequestDto, Inventory.class);
-            inventoryRepository.save(inventory);
+            inventory = inventoryRepository.save(inventory);
 
             InventoryResponseDto inventoryResponseDto = genericMapper.convert(inventory, InventoryResponseDto.class);
-            return ApiResponse.response("Inventory Succesfully Created", true, "Done", inventoryResponseDto);
+            return ApiResponse.response("Inventory Successfully Created", true, "Done", inventoryResponseDto);
         }
 
         inventoryRequestDto.setStatus(InventoryStatus.REJECTED.getValue());
 
         Inventory inventory = genericMapper.convert(inventoryRequestDto, Inventory.class);
-        inventoryRepository.save(inventory);
+        inventory = inventoryRepository.save(inventory);
         InventoryResponseDto inventoryResponseDto = genericMapper.convert(inventory, InventoryResponseDto.class);
 
-        return ApiResponse.response("Inventory Not Creatad", false, "ValidationFailed", inventoryResponseDto);
+        return ApiResponse.response("Inventory Not Created", false, "ValidationFailed", inventoryResponseDto);
     }
 
     @Override
+    @Transactional
     public ApiResponse getInventoryById(Long id) {
         InventoryResponseDto inventoryResponseDto = inventoryRepository.findById(id)
                 .map(ivnt -> genericMapper.convert(ivnt, InventoryResponseDto.class))
-                .orElseThrow(() -> new ResourceNotFoundException("Inventory Details Not found with Id :" + id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Inventory Details Not found with Id : %s", id)));
 
         return ApiResponse.response("Inventory Details Found", true, "Success", inventoryResponseDto);
     }
 
     @Override
-    public ApiResponse getAllInventories() {
-        List<InventoryResponseDto> inventoryResponseDtoList = inventoryRepository.findAll()
+    @Transactional
+    public ApiResponse getAllInventories(Pageable pageable) {
+        List<InventoryResponseDto> inventoryResponseDtoList = inventoryRepository.findAll(pageable)
                 .stream()
                 .map(ivnt -> genericMapper.convert(ivnt, InventoryResponseDto.class))
                 .toList();
-        if (!CollectionUtils.isEmpty(inventoryResponseDtoList)) {
+        if (!inventoryResponseDtoList.isEmpty()) {
             return ApiResponse.response("Inventory Details Found", true, "Success", inventoryResponseDtoList);
         }
         return ApiResponse.response("Inventory Details Not  Found", true, "Failed", inventoryResponseDtoList);
     }
 
     @Override
+    @Transactional
     public ApiResponse deleteInventory(Long id) {
         return null;
     }
@@ -90,7 +93,7 @@ public class InventoryServiceImpl implements InventoryService {
         errorList = InventoryValidation.validateInventoryRequest(inventoryRequest);
         Integer stockQuantity = stockService.getStockQuantityById(inventoryRequest.getStockId());
 
-        if (CollectionUtils.isEmpty(errorList) && inventoryRequest.getQuantity() < stockQuantity) {
+        if (errorList.isEmpty() && inventoryRequest.getQuantity() < stockQuantity) {
             stockService.updateStockQuantity(inventoryRequest.getStockId(), stockQuantity - inventoryRequest.getQuantity());
             return true;
         }

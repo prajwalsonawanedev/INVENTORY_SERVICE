@@ -1,19 +1,17 @@
 package com.poc.inventoryservice.validation;
 
-import com.poc.inventoryservice.request.InventoryRequest;
+
 import com.poc.inventoryservice.request.StockRequestDto;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class StockValidation {
+public interface StockValidation {
 
 
-    public static List<String> validateStockRequest(StockRequestDto stockRequestDto) {
+    static List<String> validateStockRequest(StockRequestDto stockRequestDto) {
 
         List<String> errorList = new ArrayList<>();
 

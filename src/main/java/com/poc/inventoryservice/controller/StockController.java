@@ -19,30 +19,29 @@ public class StockController {
         this.stockService = stockService;
     }
 
-    @PostMapping("/create-stocks")
+    @PostMapping
     public ResponseEntity<ApiResponse> createStock(@RequestBody StockRequestDto stockRequest) {
         return new ResponseEntity<>(stockService.createStock(stockRequest), HttpStatus.OK);
 
     }
 
-    @GetMapping("/get-stockById")
-    public ResponseEntity<ApiResponse> getStockById(@RequestParam Long stockId) {
+    @GetMapping("/byId/{stockId}")
+    public ResponseEntity<ApiResponse> getStockById(@PathVariable("stockId") Long stockId) {
         return new ResponseEntity<>(stockService.getStockById(stockId), HttpStatus.OK);
-
     }
 
-    @GetMapping("/get-stockByName")
-    public ResponseEntity<ApiResponse> getStockById(@RequestParam String stockName) {
+    @GetMapping("/byName/{stockByName}")
+    public ResponseEntity<ApiResponse> getStockByName(@PathVariable("stockName") String stockName) {
         return new ResponseEntity<>(stockService.getStockByName(stockName), HttpStatus.OK);
     }
 
-    @GetMapping("/get-allstocks")
+    @GetMapping
     public ResponseEntity<ApiResponse> getStocks() {
         return new ResponseEntity<>(stockService.getAllStocks(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete-stock")
-    public ResponseEntity<ApiResponse> deleteStock(@RequestParam Long stockId) {
+    @DeleteMapping("/{stockId}")
+    public ResponseEntity<ApiResponse> deleteStock(@PathVariable("stockId") Long stockId) {
         return new ResponseEntity<>(stockService.deleteStock(stockId), HttpStatus.OK);
     }
 
