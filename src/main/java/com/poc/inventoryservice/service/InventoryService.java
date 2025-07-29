@@ -2,6 +2,7 @@ package com.poc.inventoryservice.service;
 
 import com.poc.inventoryservice.request.InventoryRequest;
 import com.poc.inventoryservice.response.ApiResponse;
+import org.springframework.data.domain.Pageable;
 
 public interface InventoryService {
 
@@ -9,7 +10,7 @@ public interface InventoryService {
 
     ApiResponse getInventoryById(Long id);
 
-    ApiResponse getAllInventories();
+    ApiResponse getAllInventories(Pageable pageable);
 
     ApiResponse deleteInventory(Long id);
 }

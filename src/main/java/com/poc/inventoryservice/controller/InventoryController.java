@@ -3,6 +3,10 @@ package com.poc.inventoryservice.controller;
 import com.poc.inventoryservice.request.InventoryRequest;
 import com.poc.inventoryservice.response.ApiResponse;
 import com.poc.inventoryservice.service.InventoryService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +21,21 @@ public class InventoryController {
         this.inventoryService = inventoryService;
     }
 
-    @PostMapping("/create-inventory")
+    @PostMapping
     public ResponseEntity<ApiResponse> createInventory(@RequestBody InventoryRequest inventoryRequestDto) {
         return new ResponseEntity<>(inventoryService.createInventory(inventoryRequestDto), HttpStatus.OK);
     }
 
-    @GetMapping("/getInventoryDetailById")
-    public ResponseEntity<ApiResponse> getInventoryDetailById(@RequestParam Long inventoryId) {
+    @GetMapping("/{inventoryId}")
+    public ResponseEntity<ApiResponse> getInventoryDetailById(@PathVariable("inventoryId") Long inventoryId) {
         return new ResponseEntity<>(inventoryService.getInventoryById(inventoryId), HttpStatus.OK);
     }
 
-    @GetMapping("/getAllInventoryDetails")
-    public ResponseEntity<ApiResponse> getInventoryDetailById() {
-        return new ResponseEntity<>(inventoryService.getAllInventories(), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<ApiResponse> getInventoryDetails(@PageableDefault(page = 0, size = 100)
+                                                           @SortDefault.SortDefaults({
+                                                                   @SortDefault(sort = "inventoryId", direction = Sort.Direction.DESC)})
+                                                           Pageable pageable) {
+        return new ResponseEntity<>(inventoryService.getAllInventories(pageable), HttpStatus.OK);
     }
 }
