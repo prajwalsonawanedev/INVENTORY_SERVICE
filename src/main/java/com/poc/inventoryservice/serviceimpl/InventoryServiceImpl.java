@@ -54,8 +54,9 @@ public class InventoryServiceImpl implements InventoryService {
 
         Inventory inventory = genericMapper.convert(inventoryRequestDto, Inventory.class);
         inventoryRepository.save(inventory);
+        InventoryResponseDto inventoryResponseDto = genericMapper.convert(inventory, InventoryResponseDto.class);
 
-        return ApiResponse.response("Inventory Not Creatad", false, "ValidationFailed", inventoryRequestDto);
+        return ApiResponse.response("Inventory Not Creatad", false, "ValidationFailed", inventoryResponseDto);
     }
 
     @Override
