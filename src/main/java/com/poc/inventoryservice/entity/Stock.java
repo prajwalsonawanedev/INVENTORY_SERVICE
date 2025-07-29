@@ -12,8 +12,6 @@ import lombok.Setter;
 @Table(name = "stock_tbl")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Stock {
 
     @Id
@@ -29,5 +27,37 @@ public class Stock {
     @Column(name = "stock_quantity", nullable = false)
     @Min(1)
     private Integer stockQuantity;
+
+    public Long getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(Long stockId) {
+        this.stockId = stockId;
+    }
+
+    public String getStockName() {
+        return stockName;
+    }
+
+    public void setStockName(String stockName) {
+        this.stockName = stockName;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(Integer stockQuantity) {
+        this.stockQuantity = stockQuantity;
+    }
 }
 

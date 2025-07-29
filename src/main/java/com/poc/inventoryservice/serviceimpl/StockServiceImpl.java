@@ -100,10 +100,12 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public void updateStockQuantity(Long stockId, Integer remeaningQuantity) {
-        Optional<Stock> stock = stockRepository.findById(stockId);
-        stock.get().setStockQuantity(remeaningQuantity);
-        stockRepository.save(stock.get());
+    public void updateStockQuantity(Long stockId, Integer remainingQuantity) {
+        Stock stock = stockRepository.findById(stockId)
+                .orElseThrow(() -> new RuntimeException("Stock not found with ID: " + stockId));
+
+        stock.setStockQuantity(remainingQuantity);
+        stockRepository.save(stock);
     }
 
     public boolean validate(StockRequestDto stockRequestDto) {
