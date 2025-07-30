@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class InventoryValidation {
+public interface InventoryValidation {
 
 
-    public static List<String> validateInventoryRequest(InventoryRequest inventoryRequestDto) {
+    static List<String> validateInventoryRequest(InventoryRequest inventoryRequestDto) {
 
         List<String> errorList = new ArrayList<>();
 

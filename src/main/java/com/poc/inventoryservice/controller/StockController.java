@@ -3,8 +3,6 @@ package com.poc.inventoryservice.controller;
 import com.poc.inventoryservice.request.StockRequestDto;
 import com.poc.inventoryservice.response.ApiResponse;
 import com.poc.inventoryservice.service.StockService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +28,7 @@ public class StockController {
         return new ResponseEntity<>(stockService.getStockById(stockId), HttpStatus.OK);
     }
 
-    @GetMapping("/byName/{stockByName}")
+    @GetMapping("/byName/{stockName}")
     public ResponseEntity<ApiResponse> getStockByName(@PathVariable("stockName") String stockName) {
         return new ResponseEntity<>(stockService.getStockByName(stockName), HttpStatus.OK);
     }
