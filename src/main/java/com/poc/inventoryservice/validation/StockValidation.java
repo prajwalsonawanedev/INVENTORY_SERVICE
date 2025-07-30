@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface StockValidation {
 
-
     static List<String> validateStockRequest(StockRequestDto stockRequestDto) {
 
         List<String> errorList = new ArrayList<>();

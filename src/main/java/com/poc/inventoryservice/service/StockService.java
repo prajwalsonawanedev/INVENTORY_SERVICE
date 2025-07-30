@@ -3,10 +3,7 @@ package com.poc.inventoryservice.service;
 import com.poc.inventoryservice.request.StockRequestDto;
 import com.poc.inventoryservice.response.ApiResponse;
 
-import java.util.Optional;
-
 public interface StockService {
-
 
     ApiResponse createStock(StockRequestDto stockRequestDto);
 

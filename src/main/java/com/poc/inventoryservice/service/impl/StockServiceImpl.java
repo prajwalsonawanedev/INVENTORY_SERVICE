@@ -97,10 +97,15 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Integer getStockQuantityById(Long stockId) {
-        if (!ObjectUtils.isEmpty(stockId)) {
-            return stockRepository.findStockQuantityByStockId(stockId);
+        int qty = 0;
+        try {
+            if (!ObjectUtils.isEmpty(stockId)) {
+                qty = stockRepository.findStockQuantityByStockId(stockId);
+            }
+        } catch (Exception e) {
+            return qty;
         }
-        return 0;
+        return qty;
     }
 
     @Override
